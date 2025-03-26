@@ -1,0 +1,52 @@
+public void ProcessOrder(Order order) 
+{
+    ValidateOrder();
+    decimal total = CalculateTotal();
+    ApplyDiscount(order.Customer.IsPremium);
+    SaveToDatabase(Order order);
+    SendConfirmationEmail(order.Customer.Email, total);
+}
+    ValidateOrder(Order order)
+    {
+    if (order == null) throw new ArgumentNullException();
+    if (order.Items.Count == 0) throw new InvalidOperationException("Empty order");
+    }
+
+    CalculateTotal(Order order)
+    {
+    decimal total = 0;
+    foreach (var item in order.Items) 
+    {
+        total += item.Price * item.Quantity;
+        if (item.IsTaxable) 
+        {
+            total += item.Price * 0.1m; // 10% tax
+        }
+    }
+    }
+
+    ApplyDiscount(bool IsCustomerPremium)
+    {
+        const decimal discount=0.1m;
+    if (IsCustomerPremium) 
+    {
+        total *= 1-discount;
+    }
+    }
+
+    SaveToDatabase(Order order)
+    {
+    using (var db = new AppDbContext()) 
+    {
+        order.Total = total;
+        db.Orders.Add(order);
+        db.SaveChanges();
+    }
+    }
+
+    SendConfirmationEmail(Email email, decimal total)
+    {
+    var emailService = new EmailService();
+    emailService.Send(email, "Order Confirmed", $"Total: ${total}");
+    }
+}
