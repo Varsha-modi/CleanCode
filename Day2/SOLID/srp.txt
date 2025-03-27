@@ -1,0 +1,56 @@
+public class PrinterDriver
+{
+    private IInputDevice inputDevice;
+    private Printer printer;
+
+    public PrinterDriver(IInputDevice inputDevice, Printer printer){
+        inputDevice= inputDevice;
+        printer = printer;
+    }
+
+
+    public void Print(){
+        buffer page = inputDevice.ReadNextPage();
+        while(!inputDevice.IsEndOfFile(page)){
+            printer.Print(page);
+            page = inputDevice.ReadNextPage();
+        }
+    }
+}
+
+public interface IInputDevice
+{
+  public void IsEndOfFile();
+  public void ReadNextPage();
+}
+
+public class File: IInputDevice
+{
+  public void IsEndOfFile()
+    {
+    }
+  public void ReadNextPage(){
+    buffer page = readPage();
+  }
+}
+
+public class Scanner: IInputDevice
+{
+  public void IsEndOfFile()
+  {
+    EOFile();
+  }
+  public void ReadNextPage();
+  public void EOFile();
+}
+public class Mobile: IInputDevice
+{
+  public void IsEndOfFile()
+  {
+  }
+  public void ReadNextPage(){
+  ReadPage();
+  }
+  public void ReadPage();
+}
+  
