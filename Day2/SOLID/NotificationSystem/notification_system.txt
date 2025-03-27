@@ -1,0 +1,50 @@
+public interface INotificationChannel
+{
+	public void SendNotifications(string message);
+	public void FormatContent(Content content);
+}
+
+public class NotificationService
+{
+	public INotificationChannel notificationChannel;
+	NotificationService(INotificationChannel notificationChannel)
+	{
+		notificationChannel = notificationChannel;
+	}
+	var message = notificationChannel.FormatContent(content);
+	notificationChannel.SendNotifications(message);
+}
+
+public class Email : INotificationChannel
+{
+	public void SendNotifications(string message)
+	{
+	} 
+	public void FormatContent(Content content) 
+	{
+		return $"<html><body>{content}</body></html>";
+	}
+	
+}
+
+public class SMS : INotificationChannel
+{
+	public void SendNotifications(string message)
+	{
+	} 
+	public string FormatContent(Content content) 
+	{
+		return content.Length <= 160 ? content : content.Substring(0, 160);
+	}
+}
+
+public class PushNotification : INotificationChannel
+{
+	public void SendNotifications(string message)
+	{
+	} 
+	public string FormatContent(Content content) 
+	{
+	return content.Length <= 100 ? content : content.Substring(0, 100);
+	}
+}
