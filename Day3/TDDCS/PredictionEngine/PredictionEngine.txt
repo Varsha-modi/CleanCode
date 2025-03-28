@@ -1,0 +1,34 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PredictionEngine
+{
+    public class PredictionEngine
+    {
+        ILanguageModelAlgo languageModelAlgo;
+        public PredictionEngine(ILanguageModelAlgo algo) 
+        { 
+            languageModelAlgo = algo;
+        }
+        public String Predict(string phrase)
+        {
+            String lastWord = GetLastWord(phrase);
+            if (phrase.EndsWith(" "))
+            {
+                return languageModelAlgo.predictUsingBigram(" ");
+            }
+            else
+            {
+                return languageModelAlgo.predictUsingMonogram(lastWord);
+            }
+        }
+        public String GetLastWord(string phrase)
+        {
+            String[] words = phrase.Split(" ");
+            return words[words.Length - 1];
+        }
+    }
+}
